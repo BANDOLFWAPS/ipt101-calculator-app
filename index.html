@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator Application</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateY(-50px); }
+            to { transform: translateY(0); }
+        }
+        
+        @keyframes colorChange {
+            0% { color: var(--text-color); }
+            50% { color: #ff4081; }
+            100% { color: var(--text-color); }
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            flex-direction: column;
+            transition: background-color 0.3s, color 0.3s;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+
+        #calculator {
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            width: 100%;
+            max-width: 400px;
+            margin-bottom: 20px;
+            background-color: var(--calculator-bg);
+            transition: background-color 0.3s, color 0.3s;
+            animation: slideIn 1s ease-in-out;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            color: var(--text-color);
+            transition: color 0.3s;
+            animation: colorChange 2s infinite;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            text-align: right;
+            border: none;
+            border-radius: 10px;
+            box-sizing: border-box;
+            background-color: var(--input-bg);
+            color: var(--input-color);
+            transition: background-color 0.3s, color 0.3s;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        .btn-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        .num-btn {
+            width: 22%;
+            padding: 20px;
+            margin: 5px;
+            font-size: 1.5em;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            box-sizing: border-box;
+            transition: background 0.3s, box-shadow 0.3s, transform 0.2s;
+        }
+
+        .num-btn:hover {
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+            transform: scale(1.1);
+        }
+
+        .operator-btn {
+            background: #f44336;
+        }
+
+        .operator-btn:hover {
+            background: #e53935;
+        }
+
+        #history {
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            width: 100%;
+            max-width: 400px;
+            font-size: 1em;
+            overflow-y: auto;
+            max-height: 200px;
+            background-color: var(--history-bg);
+            color: var(--history-color);
+            transition: background-color 0.3s, color 0.3s;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        .history-item {
+            margin: 5px 0;
+            border-bottom: 1px solid;
+            padding-bottom: 5px;
+        }
+
+        @media (max-width: 500px) {
+            .num-btn {
+                width: 48%;
+                padding: 15px;
+                font-size: 1.2em;
+            }
+        }
+
+        :root {
+            --background-color: #1e1e1e;
+            --text-color: #fff;
+            --calculator-bg: #333;
+            --input-bg: #555;
+            --input-color: #fff;
+            --history-bg: #444;
+            --history-color: #fff;
+        }
+
+        body.light-mode {
+            --background-color: #f0f0f0;
+            --text-color: #000;
+            --calculator-bg: #fff;
+            --input-bg: #fff;
+            --input-color: #000;
+            --history-bg: #eee;
+            --history-color: #000;
+        }
+
+        .toggle-btn {
+            cursor: pointer;
+            font-size: 1.5em;
+            background: none;
+            border: none;
+            color: inherit;
+            transition: transform 0.2s;
+        }
+
+        .toggle-btn:hover {
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body>
+    <div id="calculator">
+        <h1>CALCULATOR APP</h1>
+        <input type="text" id="result" readonly value="0">
+        <div class="btn-container">
+            <button class="num-btn operator-btn" onclick="deleteLast()"><i class="fas fa-backspace"></i></button>
+            <button class="num-btn operator-btn" onclick="clearInput()"><i class="fas fa-trash"></i></button>
+            <button class="num-btn operator-btn" onclick="toggleHistory()"><i class="fas fa-history"></i></button>
+        </div>
+        <div class="btn-container">
+            <button class="num-btn" onclick="appendNum(1)">1</button>
+            <button class="num-btn" onclick="appendNum(2)">2</button>
+            <button class="num-btn" onclick="appendNum(3)">3</button>
+            <button class="num-btn operator-btn" onclick="appendNum('+')">+</button>
+        </div>
+        <div class="btn-container">
+            <button class="num-btn" onclick="appendNum(4)">4</button>
+            <button class="num-btn" onclick="appendNum(5)">5</button>
+            <button class="num-btn" onclick="appendNum(6)">6</button>
+            <button class="num-btn operator-btn" onclick="appendNum('-')">-</button>
+        </div>
+        <div class="btn-container">
+            <button class="num-btn" onclick="appendNum(7)">7</button>
+            <button class="num-btn" onclick="appendNum(8)">8</button>
+            <button class="num-btn" onclick="appendNum(9)">9</button>
+            <button class="num-btn operator-btn" onclick="appendNum('*')">*</button>
+        </div>
+        <div class="btn-container">
+            <button class="num-btn" onclick="appendNum('.')">.</button>
+            <button class="num-btn" onclick="appendNum(0)">0</button>
+            <button class="num-btn operator-btn" onclick="calculate()"><i class="fas fa-equals"></i></button>
+            <button class="num-btn operator-btn" onclick="appendNum('/')">/</button>
+        </div>
+    </div>
+
+    <div id="history" style="display: none;"></div>
+    <button class="toggle-btn" onclick="toggleMode()"><i class="fas fa-adjust"></i></button>
+
+    <script>
+        let currentInput = "0";
+        let history = [];
+
+        function appendNum(number) {
+            if (currentInput === "0") {
+                currentInput = number.toString();
+            } else {
+                currentInput += number;
+            }
+            document.getElementById("result").value = currentInput;
+        }
+
+        function deleteLast() {
+            currentInput = currentInput.slice(0, -1) || "0";
+            document.getElementById("result").value = currentInput;
+        }
+
+        function clearInput() {
+            currentInput = "0";
+            document.getElementById("result").value = "0";
+        }
+
+        function calculate() {
+            try {
+                const result = eval(currentInput);
+                document.getElementById("result").value = result;
+                history.push(`${currentInput} = ${result}`);
+                updateHistory();
+                currentInput = result.toString();
+            } catch (error) {
+                document.getElementById("result").value = "Error";
+                currentInput = "0";
+            }
+        }
+
+        function updateHistory() {
+            const historyDiv = document.getElementById("history");
+            historyDiv.innerHTML = history.map(item => `<div class="history-item">${item}</div>`).join('');
+        }
+
+        function toggleHistory() {
+            const historyDiv = document.getElementById("history");
+            if (historyDiv.style.display === "none") {
+                historyDiv.style.display = "block";
+            } else {
+                historyDiv.style.display = "none";
+            }
+        }
+
+        function toggleMode() {
+            document.body.classList.toggle("light-mode");
+        }
+    </script>
+</body>
+</html>
